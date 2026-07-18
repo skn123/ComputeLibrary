@@ -28,8 +28,8 @@
 #include "support/Cast.h"
 
 #include <algorithm>
-#include <deque>
 #include <set>
+#include <vector>
 namespace arm_compute
 {
 namespace mlgo
@@ -175,13 +175,15 @@ bool HeuristicTree::add_branch(NodeID id, Condition cond, NodeID t_node, NodeID 
 
 bool HeuristicTree::check_if_structurally_correct() const
 {
-    std::set<NodeID>   visited;
-    std::deque<NodeID> to_visit{_root};
+    std::set<NodeID>    visited;
+    std::vector<NodeID> to_visit;
+    to_visit.push_back(_root);
+    std::size_t front = 0;
 
-    while (!to_visit.empty())
+    while (front < to_visit.size())
     {
-        auto id = to_visit.front();
-        to_visit.pop_front();
+        auto id = to_visit[front];
+        ++front;
         if (_tree.find(id) == _tree.end())
         {
             ARM_COMPUTE_LOG_INFO_MSG_WITH_FORMAT_CORE("Missing node %zu", id);
